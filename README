@@ -26,7 +26,7 @@ tuple of your settings.py file like so:
         ...
     )   
 
-3. Create the tables:
+3. Create tables:
     $ python manage.py syncdb
 
 4. Edit rules in the Django admin

@@ -10,7 +10,7 @@ class IPIntegerField(models.Field):
     description = _("IP address")
 
     def get_internal_type(self):
-        return "PIntegerField"
+        return "BigIntegerField"
 
     def formfield(self, **kwargs):
         defaults = {'form_class': fields.IPIntegerField}
