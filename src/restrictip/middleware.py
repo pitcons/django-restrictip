@@ -26,18 +26,23 @@ class RescrictIpMiddleware(object):
             request.META.has_key('HTTP_X_FORWARDED_FOR')):
             ip = request.META['HTTP_X_FORWARDED_FOR']
             
-        int_ip = struct.unpack('!I', socket.inet_aton(ip))[0]
+        try:
+            int_ip = struct.unpack('!I', socket.inet_aton(ip))[0]
+        except socket.error:
+            int_ip = None
         return int_ip 
 
     def process_request(self, request):
         ip = self.get_ip(request)
         for rule in Rule.objects.order_by('weight'):
             if re.match(rule.path, request.path_info):
-                items = RuleItem.objects.filter(ip_from__lte=ip,
-                                                ip_to__gte=ip,
-                                                rule=rule)[:1]
-                if items:
-                    return None if items[0].is_allow() else self.forbidden()
+
+                if ip is not None:
+                    items = RuleItem.objects.filter(ip_from__lte=ip,
+                                                    ip_to__gte=ip,
+                                                    rule=rule)[:1]
+                    if items:
+                        return None if items[0].is_allow() else self.forbidden()
 
                 return None if rule.is_allow() else self.forbidden()
         return None
