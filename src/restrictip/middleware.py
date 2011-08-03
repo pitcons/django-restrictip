@@ -5,6 +5,7 @@ import re
 import struct
 import socket
 from django import http
+from django.conf import settings
 from django.template.loader import get_template
 from django.template import TemplateDoesNotExist, Context
 
@@ -13,9 +14,16 @@ from models import Rule, RuleItem
 
 class RescrictIpMiddleware(object):
 
+    def __init__(self):
+        try:
+            self.frontends = settings.RESTRICTIP_FRONTENDS
+        except AttributeError:
+            self.frontends = []
+
     def get_ip(self, request):
         ip = request.META.get('REMOTE_ADDR', False)
-        if (not ip or ip == '127.0.0.1') and request.META.has_key('HTTP_X_FORWARDED_FOR'):
+        if ((not ip or ip == '127.0.0.1' or (ip in self.frontends)) and
+            request.META.has_key('HTTP_X_FORWARDED_FOR')):
             ip = request.META['HTTP_X_FORWARDED_FOR']
             
         int_ip = struct.unpack('!I', socket.inet_aton(ip))[0]
@@ -41,3 +49,4 @@ class RescrictIpMiddleware(object):
         except TemplateDoesNotExist:
             html = '<h1>Forbidden</h1>'
         return http.HttpResponseForbidden(html)
+
