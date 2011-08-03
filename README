@@ -1,0 +1,33 @@
+django-restrictip
+=============
+
+An ip blocker by regexp and ip range for Django apps.
+
+
+Usage
+=====
+
+
+1. Place 'restrictip' in the INSTALLED_APPS tuple of your settings.py file like so:
+    
+    INSTALLED_APPS = (
+        ...
+        'restrictip',
+        ...
+    )
+
+
+2. Place 'restrictip.middleware.RescrictIpMiddleware' in the MIDDLEWARE_CLASSES 
+tuple of your settings.py file like so:
+
+    MIDDLEWARE_CLASSES = (
+        ...
+       'restrictip.middleware.RescrictIpMiddleware',       
+        ...
+    )   
+
+3. Create the tables:
+    $ python manage.py syncdb
+
+4. Edit rules in the Django admin
+
