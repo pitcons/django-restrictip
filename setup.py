@@ -6,7 +6,7 @@ def read(fname):
 
 setup(
     name = "django-restrictip",
-    version = "1.0.0",
+    version = "1.0.1",
     url = 'http://github.com/pitcons/django-restrictip',
     license = 'GPL v3',
     description = "An ip blocker by regexp and ip range for Django apps.",
